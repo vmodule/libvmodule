@@ -1,0 +1,62 @@
+/*
+ * util.h
+ *
+ *  Created on: Apr 28, 2017
+ *      Author: jeffrey
+ */
+/*
+ * Copyright (c) <2017>, Memcached
+ * All rights reserved.
+ * This source code copy from Memcached Open Source
+ * format for Network bu Jeffrey..
+ */
+#ifndef UTIL_H_
+#define UTIL_H_
+#include <sys/types.h>
+#include <stdint.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+/* fast-enough functions for uriencoding strings. */
+void uriencode_init(void);
+bool uriencode(const char *src, char *dst, const size_t srclen,
+		const size_t dstlen);
+
+/*
+ * Wrappers around strtoull/strtoll that are safer and easier to
+ * use.  For tests and assumptions, see internal_tests.c.
+ *
+ * str   a NULL-terminated base decimal 10 unsigned integer
+ * out   out parameter, if conversion succeeded
+ *
+ * returns true if conversion succeeded.
+ */
+bool safe_strtoull(const char *str, uint64_t *out);
+bool safe_strtoll(const char *str, int64_t *out);
+bool safe_strtoul(const char *str, uint32_t *out);
+bool safe_strtol(const char *str, int32_t *out);
+bool safe_strtod(const char *str, double *out);
+
+#ifndef HAVE_HTONLL
+extern uint64_t htonll(uint64_t);
+extern uint64_t ntohll(uint64_t);
+#endif
+
+#ifdef __GCC
+# define __gcc_attribute__ __attribute__
+#else
+# define __gcc_attribute__(x)
+#endif
+
+/**
+ * Vararg variant of perror that makes for more useful error messages
+ * when reporting with parameters.
+ *
+ * @param fmt a printf format
+ */
+void vperror(const char *fmt, ...) __gcc_attribute__ ((format (printf, 1, 2)));
+
+#ifdef __cplusplus
+}
+#endif
+#endif /* UTIL_H_ */
